@@ -1,5 +1,8 @@
 package renderEngine;
 
+import java.util.List;
+import java.util.Map;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -11,6 +14,7 @@ import entities.Entity;
 import models.TexturedModel;
 import models.rawModel;
 import shaders.StaticShader;
+import textures.ModelTexture;
 import toolbox.Maths;
 
 //Declaração da classe - Renderiza um modelo em um viewing
@@ -19,9 +23,17 @@ public class Renderer {
 	private static final float FOV = 70;
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE  = 100;
+	
+	
 	private Matrix4f projectionMatrix;
+	private StaticShader shader;
 	
 	public Renderer(StaticShader shader) {
+		//Faz com que a parte não vista no viewing seja não renderizada
+		this.shader = shader;
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
+		//todas as faces de trás não serão renderizadas
 		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -56,6 +68,47 @@ public class Renderer {
 	 * @param model
 	 * 		Recebe o objeto de classe rawmodel que será renderizado
 	 */
+	
+	/*
+	
+	public void render(Map<TexturedModel, List<Entity>> entities) {
+		for(TexturedModel model:entities.keySet()) {
+			prepareTexturedModel(model);
+			List<Entity> batch = entities.get(model);
+			for(Entity entity:batch) {
+				prepareInstance(entity);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel(), GL11.GL_UNSIGNED_INT, 0);
+			}
+			unbindTexturedModel();
+		}
+	}
+	
+	private void prepareTexturedModel(TexturedModel model) {
+		rawModel rawmodel = model.getRawModel();
+		GL30.glBindVertexArray(rawmodel.getVaoID());
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
+		GL20.glEnableVertexAttribArray(2);
+		ModelTexture texture = model.getTexture();
+		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+	}
+	
+	private void unbindTexturedModel() {
+		GL20.glDisableVertexAttribArray(0);
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
+		GL30.glBindVertexArray(0);
+	}
+	
+	private void prepareInstance(Entity entidade) {
+		Matrix4f transformationMatrix = 
+				Maths.createTransformationMatrix(entidade.getPosition(),
+						entidade.getRotx(), entidade.getRoty(), entidade.getRotz(), entidade.getScale());
+		shader.loadTransformationMatrix(transformationMatrix);
+	}*/
+	
 	public void render(Entity entidade, StaticShader shader) {
 		TexturedModel model = entidade.getModel();
 		rawModel rawmodel = model.getRawModel();
@@ -68,11 +121,13 @@ public class Renderer {
 		//cria uma matriz de transformação da entidade
 		
 		shader.loadTransformationMatrix(transformationMatrix);
-		
+		ModelTexture texture = model.getTexture();
+		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 		//indica: o tipo de shape, o número do primeiro atributo e o número de vértices;
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, rawmodel.getVertexCount());
+		//mostrar a professora :3
+		GL11.glDrawElements(GL11.GL_TRIANGLES, rawmodel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 		//Neste caso, o número de vértices é cedido pelo método get vertex count da classe model;
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);

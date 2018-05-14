@@ -18,7 +18,14 @@ import models.rawModel;
 
 
 
-//declaração da classe como pública
+/**
+ * Classe que define o carregamento de modelos
+ * Contém listas com os IDs de VAOs,
+ * VBOs e texturas;
+ * 
+ * 
+ * 
+ */
 public class Loader {
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
@@ -140,6 +147,8 @@ public class Loader {
 	 * 		Os dados de geometria que serão armazenados no VAO(os tipos
 	 * 		de dados que esse VBO em específico carrega);
 	 * 		No caso, a posição dos vértices;
+	 * @param coordinateSize
+	 * 		Tamanho das coordenadas que serão armazenadas no atributo do VAO
 	 */
 	public void storeDataAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = GL15.glGenBuffers();

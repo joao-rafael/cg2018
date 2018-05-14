@@ -27,6 +27,10 @@ public class StaticShader extends ShaderProgram {
 	private int location_lightPosition;
 	private int location_lightColor;
 	
+	private int location_shineDamper;
+	private int location_reflectivity;
+	
+	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 		// TODO Auto-generated constructor stu
@@ -51,8 +55,15 @@ public class StaticShader extends ShaderProgram {
 		location_transformationMatrix = super.getUniformVariable("transformationMatrix");
 		location_projectionMatrix = super.getUniformVariable("projectionMatrix");
 		location_viewMatrix = super.getUniformVariable("viewMatrix");
-		location_lightColor = super.getUniformVariable("LightColor");
-		location_lightPosition = super.getUniformVariable("LightPosition");
+		location_lightColor = super.getUniformVariable("lightColor");
+		location_lightPosition = super.getUniformVariable("lightPosition");
+		location_shineDamper = super.getUniformVariable("shineDamper");
+		location_reflectivity = super.getUniformVariable("reflectivity");
+	}
+	
+	public void loadShineVariables(float damper, float reflectivity) {
+		super.loadFloat(location_shineDamper, damper);
+		super.loadFloat(location_reflectivity, reflectivity);
 	}
 	
 	/**

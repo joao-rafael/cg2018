@@ -61,8 +61,11 @@ public class MainGameLoop {
 		 * 
 		 */
 		
-		rawModel model = OBJLoader.loadOBJModel("stall", carregador);
-		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(carregador.loadTexture("texture")));
+		rawModel model = OBJLoader.loadOBJModel("dragon", carregador);
+		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(carregador.loadTexture("stalltexture")));
+		ModelTexture texture = staticModel.getTexture();
+		texture.setShineDamper(10);
+		texture.setReflectivity(1);
 		
 		Entity entity = new Entity(staticModel,new Vector3f(0,0,-25),0,0,0,1);
 		

@@ -20,9 +20,14 @@ import models.rawModel;
 public class OBJLoader {
 	
 	/**
+	 * este método pega os dados de um arquivo.obj e retorna uma instancia
+	 * de um rawModel para que o jogo rendereize
+	 * 
 	 * 
 	 * @param FileName
+	 * 		nome do arquivo OBJ 
 	 * @param loader
+	 * 		carregador
 	 * @return
 	 */
 	public static rawModel loadOBJModel(String FileName, Loader loader) {
@@ -30,32 +35,36 @@ public class OBJLoader {
 		try {
 			fr = new FileReader(new File("res/"+FileName+".obj"));
 		}catch (FileNotFoundException e){
-			System.err.println("Impossivel carregar o arquivo");
+			System.err.println("Impossivel carregar o arquivo!");
 			e.printStackTrace();
 		}
 		
-		
+		//o buffered reader permite ler o arquivo
 		BufferedReader reader = new BufferedReader(fr);
 		
-		
+		//a string se chama line porquê receberá uma linha inteira
 		String line;
+		
+		//lista de atributos que serão lidos
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
 		List<Vector2f> textures = new ArrayList<Vector2f>();
 		List<Vector3f> normals = new ArrayList<Vector3f>();
 		List<Integer> indices = new ArrayList<Integer>();
 		
+		//o loader precisa dos dados em arrays
 		float[] verticesArray = null;
 		float[] normalsArray = null;
 		float[] textureArray = null;
 		int[] indicesArray = null;
 		
+		//try catch para ler o arquivo
 		try {
-			//Leitura do arquivo - loop infiti
 			while(true) {
 				line = reader.readLine();
 				String[] currentLine = line.split(" ");
 				//vertices
 				if(line.startsWith("v ")) {
+					//vertice
 					//pega os próximos 3 valores e põe em um vetor de 3 floats
 					Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]),
 							Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
@@ -63,6 +72,7 @@ public class OBJLoader {
 					vertices.add(vertex);
 				//texturas
 				}else if(line.startsWith("vt ")){
+					//coordenada de textura
 					//pega os próximos 2 valores e põe em um vetor de 2 floats
 					Vector2f texture = new Vector2f(Float.parseFloat(currentLine[1]),
 							Float.parseFloat(currentLine[2]));
@@ -76,12 +86,13 @@ public class OBJLoader {
 							Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
 					normals.add(normal);
 				}else if (line.startsWith("f ")) {
+					//definições de faces
 					textureArray = new float[vertices.size() * 2];
 					normalsArray = new float[vertices.size() * 3];
 					break;
 				}
-				
 			}
+			
 			while(line!=null) {
 				if(!line.startsWith("f ")) {
 					line = reader.readLine();
@@ -98,7 +109,6 @@ public class OBJLoader {
 				line = reader.readLine();
 			}
 			reader.close();
-			//fecha o leitor depois que a leitura do arquivo OBJ acabar
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -116,6 +126,7 @@ public class OBJLoader {
 		for(int i = 0; i < indices.size(); i++) {
 			indicesArray[i] = indices.get(i);
 		}
+		
 		return loader.loadtoVAO(verticesArray, textureArray, normalsArray, indicesArray);
 	}
 	
@@ -131,6 +142,7 @@ public class OBJLoader {
 		normalsArray[currentVertexPointer*3] = currentNorm.x;
 		normalsArray[currentVertexPointer*3+1] = currentNorm.y;
 		normalsArray[currentVertexPointer*3+2] = currentNorm.z;
-		
 	}
+	
+	
 }
