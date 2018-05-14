@@ -12,8 +12,9 @@ import models.rawModel;
 import objloader.ModelData;
 import objloader.OBJfileLoader;
 import renderEngine.Loader;
+import renderEngine.MainRenderer;
 import renderEngine.OBJLoader;
-import renderEngine.Renderer;
+import renderEngine.EntityRenderer;
 import shaders.StaticShader;
 import textures.ModelTexture;
 import renderEngine.DisplayManager;
@@ -37,16 +38,6 @@ public class MainGameLoop {
 		//cria um objeto carregador
 		Loader carregador = new Loader();
 		
-		//instancia um shader
-		StaticShader shader = new StaticShader();
-		
-		//cria um objeto renderer
-		Renderer renderer = new Renderer(shader);
-		
-		/**
-		 * instancia o rawmodel usando o carregador de OBJ
-		 */
-		
 		/**
 		 * OBJ.fileLoader.LoadOBJ("tree");
 		 * 
@@ -60,6 +51,7 @@ public class MainGameLoop {
 		 * 
 		 * 
 		 */
+		MainRenderer renderer = new MainRenderer();
 		
 		rawModel model = OBJLoader.loadOBJModel("dragon", carregador);
 		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(carregador.loadTexture("stalltexture")));
@@ -81,25 +73,19 @@ public class MainGameLoop {
 		 */
 		while(!Display.isCloseRequested()) {
 			//enquanto o método de fechar o display for falso:
-
+			camera.move();
 			//game logic
-			
+			renderer.processEntity(entity);
+			renderer.render(light, camera);
+			DisplayManager.updateDisplay();
 			//movimentação e transformações geométiricas
 			/*entity.increasePosition(0  , 0, -0.1f);
 			entity.increaseRotation(0, 1, 0); */ 
 			entity.increaseRotation(0, 1, 0);
-			camera.move();
-			renderer.prepare();
-			shader.start();
-			shader.LoadLight(light);
-			shader.loadViewMatrix(camera);
-			renderer.render(entity, shader);
-			shader.stop();
 			DisplayManager.updateDisplay();
 			//invoca o método que deixa o display ativo
 		}
-		
-		shader.cleanUp();
+		renderer.cleanUp();
 		carregador.cleanUP();
 		DisplayManager.closeDisplay();
 	}

@@ -17,41 +17,27 @@ import shaders.StaticShader;
 import textures.ModelTexture;
 import toolbox.Maths;
 
-//Declaração da classe - Renderiza um modelo em um viewing
-public class Renderer {
-	
-	private static final float FOV = 70;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE  = 100;
-	
-	
-	private Matrix4f projectionMatrix;
+/**
+ * Renderiza uma entidade no viewing
+ * 
+ *
+ */
+public class EntityRenderer {
+
 	private StaticShader shader;
 	
-	public Renderer(StaticShader shader) {
-		//Faz com que a parte não vista no viewing seja não renderizada
+	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
 		//todas as faces de trás não serão renderizadas
-		createProjectionMatrix();
+		
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 	
-	/**
-	 * Método que prepara o viewing para que o próximo rendering seja chamado;
-	 * deve ser chamado sempre, todo frame
-	 * glClear color definirá que cor será exibida ao limpar a tela no início de
-	 * cada frame
-	 * 
-	 */
-	public void prepare() {
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClearColor(1, 0, 0, 1);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
-	}
+	
 	
 	
 	/**Antes que um VAO seja renderizado, ele precisa estar ativo
@@ -69,7 +55,6 @@ public class Renderer {
 	 * 		Recebe o objeto de classe rawmodel que será renderizado
 	 */
 	
-	/*
 	
 	public void render(Map<TexturedModel, List<Entity>> entities) {
 		for(TexturedModel model:entities.keySet()) {
@@ -77,7 +62,7 @@ public class Renderer {
 			List<Entity> batch = entities.get(model);
 			for(Entity entity:batch) {
 				prepareInstance(entity);
-				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel(), GL11.GL_UNSIGNED_INT, 0);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();
 		}
@@ -107,8 +92,9 @@ public class Renderer {
 				Maths.createTransformationMatrix(entidade.getPosition(),
 						entidade.getRotx(), entidade.getRoty(), entidade.getRotz(), entidade.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
-	}*/
+	}
 	
+	/*
 	public void render(Entity entidade, StaticShader shader) {
 		TexturedModel model = entidade.getModel();
 		rawModel rawmodel = model.getRawModel();
@@ -133,25 +119,6 @@ public class Renderer {
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
-	}
+	}*/
 	
-	/**
-	 * Cria uma matriz de projeção - será usada para ajustar e configurar
-	 * o processo de viewing
-	 */
-	private void createProjectionMatrix() {
-		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-        float x_scale = y_scale / aspectRatio;
-        float frustum_length = FAR_PLANE - NEAR_PLANE;
- 
-        projectionMatrix = new Matrix4f();
-        projectionMatrix.m00 = x_scale;
-        projectionMatrix.m11 = y_scale;
-        projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-        projectionMatrix.m23 = -1;
-        projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-        projectionMatrix.m33 = 0;
-	}
-		
 }
