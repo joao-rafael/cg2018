@@ -1,5 +1,9 @@
 package engineTester;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 //Importações
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
@@ -16,6 +20,7 @@ import renderEngine.MainRenderer;
 import renderEngine.OBJLoader;
 import renderEngine.EntityRenderer;
 import shaders.StaticShader;
+import terrains.Terrain;
 import textures.ModelTexture;
 import renderEngine.DisplayManager;
 
@@ -51,21 +56,26 @@ public class MainGameLoop {
 		 * 
 		 * 
 		 */
-		MainRenderer renderer = new MainRenderer();
 		
-		rawModel model = OBJLoader.loadOBJModel("dragon", carregador);
-		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(carregador.loadTexture("stalltexture")));
-		ModelTexture texture = staticModel.getTexture();
-		texture.setShineDamper(10);
-		texture.setReflectivity(1);
-		
-		Entity entity = new Entity(staticModel,new Vector3f(0,0,-25),0,0,0,1);
-		
-		Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1,1,1));
+		rawModel model = OBJLoader.loadOBJModel("tree", carregador);
+        
+        TexturedModel staticModel = new TexturedModel(model,new ModelTexture(carregador.loadTexture("tree")));
+         
+        List<Entity> entities = new ArrayList<Entity>();
+        Random random = new Random();
+        for(int i=0;i<500;i++){
+            entities.add(new Entity(staticModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
+        }
+        Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
+        
+        Terrain terrain = new Terrain(0, -1,carregador,new ModelTexture(carregador.loadTexture("grass")));
+        Terrain terrain2 = new Terrain(1, -1,carregador,new ModelTexture(carregador.loadTexture("grass")));
+         
+        Camera camera = new Camera();   
+        MainRenderer renderer = new MainRenderer();
 		/**
 		 * Instancia uma câmera
 		 */
-		Camera camera = new Camera();
 		
 		//continuar na instancia de entidade Entidade entity = new Entidade(static)
 		/**
@@ -75,14 +85,13 @@ public class MainGameLoop {
 			//enquanto o método de fechar o display for falso:
 			camera.move();
 			//game logic
-			renderer.processEntity(entity);
-			renderer.render(light, camera);
-			DisplayManager.updateDisplay();
-			//movimentação e transformações geométiricas
-			/*entity.increasePosition(0  , 0, -0.1f);
-			entity.increaseRotation(0, 1, 0); */ 
-			entity.increaseRotation(0, 1, 0);
-			DisplayManager.updateDisplay();
+			renderer.processTerrain(terrain);
+            renderer.processTerrain(terrain2);
+            for(Entity entity:entities){
+                renderer.processEntity(entity);
+            }
+            renderer.render(light, camera);
+            DisplayManager.updateDisplay();
 			//invoca o método que deixa o display ativo
 		}
 		renderer.cleanUp();
