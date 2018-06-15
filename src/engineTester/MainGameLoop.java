@@ -97,20 +97,21 @@ public class MainGameLoop {
 public class MainGameLoop {
 	 
     public static void main(String[] args) {
- 
         DisplayManager.createDisplay();
         Loader loader = new Loader();
-         
-         
         rawModel model = OBJLoader.loadOBJModel("tree", loader);
-         
-        TexturedModel staticModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
-         
+        TexturedModel tree = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));  
+        
+        /*TexturedModel grass = new TexturedModel(OBJLoader.loadOBJModel("grass", loader), new ModelTexture(loader.loadTexture("grasstexture")));
+        grass.getTexture().setHasTransparency(true);
+        grass.getTexture().setUseFakeLighting(true);      
+        TexturedModel abursto = new TexturedModel(OBJLoader.loadOBJModel("abursto", loader), new ModelTexture(loader.loadTexture("aburstotexture")));
+        abursto.getTexture().setHasTransparency(true);*/
         List<Entity> entities = new ArrayList<Entity>();
         
         Random random = new Random();
         for(int i=0;i<500;i++){
-            entities.add(new Entity(staticModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
+            entities.add(new Entity(tree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
         }
          
         Light light = new Light(new Vector3f(200,100,100),new Vector3f(1,1,1));
