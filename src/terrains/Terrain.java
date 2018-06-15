@@ -6,41 +6,29 @@ import textures.ModelTexture;
 
 public class Terrain {
 	     
-	    private static final float SIZE = 800;
+	    private static final float SIZE = 200;
 	    private static final int VERTEX_COUNT = 128;
 	     
 	    private float x;
 	    private float z;
 	    private rawModel model;
 	    private ModelTexture texture;
-	     
+	 
 	    public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture){
 	        this.texture = texture;
 	        this.x = gridX * SIZE;
 	        this.z = gridZ * SIZE;
 	        this.model = generateTerrain(loader);
 	    }
-	     
-	     
-	     
 	    public float getX() {
 	        return x;
 	    }
-	 
-	 
-	 
 	    public float getZ() {
 	        return z;
 	    }
-	 
-	 
-	 
 	    public rawModel getModel() {
 	        return model;
 	    }
-	 
-	 
-	 
 	    public ModelTexture getTexture() {
 	        return texture;
 	    }

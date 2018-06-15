@@ -18,14 +18,11 @@ import textures.ModelTexture;
 import toolbox.Maths;
  /**
   * Renderer de terreno retirado de um tutorial
-  * 
-  * 
-  * Feito por thinMatrix(Autor do Tutorial)
   */
 public class TerrainRenderer {
  
-    private TerrainShader shader;
- 
+	private TerrainShader shader;
+	 
     public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
         shader.start();

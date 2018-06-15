@@ -32,6 +32,8 @@ import renderEngine.DisplayManager;
  * contém o loop de execução do jogo
  *
  */
+
+/*
 public class MainGameLoop {
 
 	public static void main(String[] args) {
@@ -43,7 +45,7 @@ public class MainGameLoop {
 		//cria um objeto carregador
 		Loader carregador = new Loader();
 		
-		/**
+		/*
 		 * OBJ.fileLoader.LoadOBJ("tree");
 		 * 
 		 * ModelData data = OBJFileLoader.loadOBJ("nome");
@@ -55,10 +57,8 @@ public class MainGameLoop {
 		 * TexturedModel staticModel = new TexturedModel(d, new ModelTexture(carregador.loadTexture("texture")));
 		 * 
 		 * 
-		 */
-		
+		 
 		rawModel model = OBJLoader.loadOBJModel("tree", carregador);
-        
         TexturedModel staticModel = new TexturedModel(model,new ModelTexture(carregador.loadTexture("tree")));
          
         List<Entity> entities = new ArrayList<Entity>();
@@ -66,21 +66,15 @@ public class MainGameLoop {
         for(int i=0;i<500;i++){
             entities.add(new Entity(staticModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
         }
-        Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
+        Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
         
         Terrain terrain = new Terrain(0, -1,carregador,new ModelTexture(carregador.loadTexture("grass")));
         Terrain terrain2 = new Terrain(1, -1,carregador,new ModelTexture(carregador.loadTexture("grass")));
          
         Camera camera = new Camera();   
         MainRenderer renderer = new MainRenderer();
-		/**
-		 * Instancia uma câmera
-		 */
 		
 		//continuar na instancia de entidade Entidade entity = new Entidade(static)
-		/**
-		 * executa os métodos abaixo todo frame
-		 */
 		while(!Display.isCloseRequested()) {
 			//enquanto o método de fechar o display for falso:
 			camera.move();
@@ -99,4 +93,50 @@ public class MainGameLoop {
 		DisplayManager.closeDisplay();
 	}
 
+}*/
+public class MainGameLoop {
+	 
+    public static void main(String[] args) {
+ 
+        DisplayManager.createDisplay();
+        Loader loader = new Loader();
+         
+         
+        rawModel model = OBJLoader.loadOBJModel("tree", loader);
+         
+        TexturedModel staticModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
+         
+        List<Entity> entities = new ArrayList<Entity>();
+        
+        Random random = new Random();
+        for(int i=0;i<500;i++){
+            entities.add(new Entity(staticModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
+        }
+         
+        Light light = new Light(new Vector3f(200,100,100),new Vector3f(1,1,1));
+         
+        Terrain terrain = new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("grass")));
+        Terrain terrain2 = new Terrain(1,-1,loader,new ModelTexture(loader.loadTexture("grass")));
+         
+        Camera camera = new Camera();   
+        MainRenderer renderer = new MainRenderer();
+         
+        while(!Display.isCloseRequested()){
+            camera.move();
+             
+            renderer.processTerrain(terrain);
+            renderer.processTerrain(terrain2);
+            for(Entity entity:entities){
+                renderer.processEntity(entity);
+            }
+            renderer.render(light, camera);
+            DisplayManager.updateDisplay();
+        }
+ 
+        renderer.cleanUp();
+        loader.cleanUP();
+        DisplayManager.closeDisplay();
+ 
+    }
+ 
 }
