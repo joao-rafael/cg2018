@@ -4,7 +4,7 @@ in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec3 toLightVector;
 in vec3 toCameraVector;
-in visibility;
+in float visibility;
 
 out vec4 out_Color;
 
