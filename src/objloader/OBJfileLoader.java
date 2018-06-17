@@ -10,10 +10,22 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-
+/**
+ * O objetivo dessa classe será o carregamento de arquivos do tipo .OBJ
+ *
+ */
 public class OBJfileLoader {
-
 	private static final String RES_LOC = "res/";
+	/**
+	 * este método pega os dados de um arquivo.obj e retorna uma instancia
+	 * de um rawModel para que o jogo rendereiz
+	 * 
+	 * @param FileName
+	 * 		nome do arquivo OBJ 
+	 * @param loader
+	 * 		carregador
+	 * @return
+	 */
 	public static ModelData loadOBJ(String objFileName) {
 		FileReader isr = null;
 		File objFile = new File(RES_LOC + objFileName + ".obj");

@@ -12,24 +12,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 import models.rawModel;
 
-/**
- * O objetivo dessa classe será o carregamento de arquivos do tipo .OBJ
- * A classe apresenta problemas 
- *
- */
+
 public class OBJLoader {
 	
-	/**
-	 * este método pega os dados de um arquivo.obj e retorna uma instancia
-	 * de um rawModel para que o jogo rendereize
-	 * 
-	 * 
-	 * @param FileName
-	 * 		nome do arquivo OBJ 
-	 * @param loader
-	 * 		carregador
-	 * @return
-	 */
+	
 	public static rawModel loadOBJModel(String FileName, Loader loader) {
 		FileReader fr = null;
 		try {
