@@ -8,7 +8,8 @@ The java coding in this project follows the tutorial provided by thin Matrix(LWJ
 ## What is used:
 * Java 8
 * Low Weight Java Game Library
-* OpenGL GLSL
+* OpenGL
+* GLSL
 * OBJ models
 
 ## Objective:
